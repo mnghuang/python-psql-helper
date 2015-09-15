@@ -124,7 +124,7 @@ class PsqlConnection(object):
          is not in csv or comma delimited format. 
         '''
         for f in os.listdir(directory):
-            if f.endswith(file_type):
+            if f.endswith('.csv'):
                 file_path = '{0}/{1}'.format(directory, f)
                 table_name = re.sub('-| ', '_', f.split('.')[0])
                 headers = self._get_headers(file_path)
@@ -143,7 +143,7 @@ class PsqlConnection(object):
         '''
         with open(file_path) as f:
             headers = f.readline().split(',')
-            headers = [h.strip('\n').strip(' ').strip('"') for h in headers]
+            headers = [re.sub('\n| |"|\.', '', h) for h in headers]
             headers = [re.sub(' |/', '_', h) for h in headers]
             return [re.sub('_+', '_', h) for h in headers]
 
